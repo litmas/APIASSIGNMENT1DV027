@@ -18,6 +18,8 @@ const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 
+app.set('trust proxy', process.env.NODE_ENV === 'production' ? 1 : false);
+
 require('./src/config/mongoose')();
 app.get('/', (req, res) => {
     res.json({
