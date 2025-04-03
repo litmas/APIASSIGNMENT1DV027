@@ -18,8 +18,6 @@ const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 
-app.set('trust proxy', process.env.NODE_ENV === 'production' ? 1 : false);
-
 require('./src/config/mongoose')();
 app.get('/', (req, res) => {
     res.json({
@@ -43,7 +41,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000'
+        url: 'https://apiassignment1dv027-production.up.railway.app'
       }
     ],
     components: {
