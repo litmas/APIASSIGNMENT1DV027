@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "prod": "node server.js --omit=dev",  // Added production script
+    "prod": "node server.js --omit=dev",
     "seed": "node src/scripts/seed.js",
     "test": "newman run tests/postman/MovieDatabaseAPI.postman_collection.json -e tests/postman/MovieDatabaseAPI.postman_environment.json"
   },
