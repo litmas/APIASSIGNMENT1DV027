@@ -71,12 +71,14 @@ const sendErrorResponse = (err, res) => {
   res.status(err.statusCode || 500).json(response);
 };
 
-module.exports = (err, req, res) => {
+module.exports = (err, req, res, next) => {  // Add the 'next' parameter
+  // Set default values if they don't exist
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
+  err.message = err.message || 'Something went wrong';
 
-  let error = { ...err };
-  error.message = err.message;
+  // Handle specific error types
+  let error = { ...err, message: err.message };
 
   if (error.name === 'CastError') error = handleCastErrorDB(error);
   if (error.code === 11000) error = handleDuplicateFieldsDB(error);
@@ -84,7 +86,44 @@ module.exports = (err, req, res) => {
   if (error.name === 'JsonWebTokenError') error = handleJWTError();
   if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
-  sendErrorResponse(error, res);
+  // Check if response object is valid
+  if (!res || typeof res.status !== 'function') {
+    console.error('Invalid response object - cannot send error response');
+    return;
+  }
+
+  // Development error response
+  if (process.env.NODE_ENV === 'development') {
+    res.status(error.statusCode).json({
+      status: error.status,
+      error: error,
+      message: error.message,
+      stack: error.stack,
+      ...(error.details && { details: error.details })
+    });
+  } 
+  // Production error response
+  else {
+    // Operational, trusted error: send message to client
+    if (error.isOperational) {
+      res.status(error.statusCode).json({
+        status: error.status,
+        message: error.message,
+        ...(error.details && { details: error.details })
+      });
+    } 
+    // Programming or other unknown error: don't leak error details
+    else {
+      // 1) Log error
+      console.error('ERROR 💥', error);
+      
+      // 2) Send generic message
+      res.status(500).json({
+        status: 'error',
+        message: 'Something went very wrong!'
+      });
+    }
+  }
 };
 
 
