@@ -46,7 +46,7 @@ exports.getAllMovies = async (req, res, next) => {
     const response = {
       status: 'success',
       results: movies.length,
-      data: moviesWithLinks,
+      movies: moviesWithLinks,
       links: {
         self: { href: req.originalUrl },
         first: { href: `${req.baseUrl}/movies?page=1&limit=${limit}` },
@@ -81,7 +81,7 @@ exports.getMovie = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
+      movie: {
         movie: movieWithLinks,
       },
     });
@@ -106,7 +106,7 @@ exports.createMovie = async (req, res, next) => {
 
     res.status(201).json({
       status: 'success',
-      data: {
+      movie: {
         movie: movieWithLinks,
       },
     });
@@ -138,7 +138,7 @@ exports.updateMovie = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
+      movie: {
         movie: movieWithLinks,
       },
     });
@@ -190,7 +190,7 @@ exports.getMovieRatings = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       results: ratings.length,
-      data: {
+      ratings: {
         ratings: ratingsWithLinks,
       },
     });
