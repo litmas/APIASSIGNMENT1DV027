@@ -1,4 +1,3 @@
-const { StatusCodes } = require('http-status-codes');
 const Movie = require('../models/movieModel');
 const Rating = require('../models/ratingModel');
 const AppError = require('../utils/appError');
@@ -73,14 +72,14 @@ exports.getMovie = async (req, res, next) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) {
-      return next(new AppError('No movie found with that ID', StatusCodes.NOT_FOUND));
+      return next(new AppError('No movie found with that ID', 404));
     }
 
     const movieObj = movie.toObject();
     movieObj.id = movieObj._id;
     const movieWithLinks = addHATEOASLinks(movieObj, req, 'movie');
 
-    res.status(StatusCodes.OK).json({
+    res.status(200).json({
       status: 'success',
       data: {
         movie: movieWithLinks,
