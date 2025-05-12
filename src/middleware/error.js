@@ -30,7 +30,7 @@ const handleDuplicateFieldsDB = (err) => {
 const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
   const message = `Invalid input data. ${errors.join('. ')}`;
-  return new AppError(message, 400);
+  return new AppError(message, 400, { errors });
 };
 
 /**
@@ -51,42 +51,40 @@ const handleJWTExpiredError = () => new AppError('Your token has expired! Please
  * @param {Error} err - The error object containing error information.
  * @param {Object} res - The response object used to send the error response.
  */
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
-};
-
-/**
- * Function to handle sending error responses to the client in production environment.
- *
- * @param {object} err - The error object containing information about the error.
- * @param {object} res - The response object to send the error response.
- */
-const sendErrorProd = (err, res) => {
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-  } else {
-    console.error('error', err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong!',
-    });
+const sendErrorResponse = (err, res) => {
+  // Check if response object is valid
+  if (!res || typeof res.status !== 'function') {
+	console.error('Invalid response object:', res);
+	return;
   }
+
+  const response = {
+	status: err.status,
+	message: err.message,
+	...(err.details && { details: err.details }),
+	...(process.env.NODE_ENV === 'development' && {
+  	stack: err.stack,
+  	error: err,
+	}),
+  };
+
+  res.status(err.statusCode || 500).json(response);
 };
 
-/**
- * Exports the current module for use in other files
- */
-module.exports = (err, res) => {
+module.exports = (err, req, res) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
-      sendErrorProd(error, res);
-  }
+
+  let error = { ...err };
+  error.message = err.message;
+
+  if (error.name === 'CastError') error = handleCastErrorDB(error);
+  if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+  if (error.name === 'ValidationError') error = handleValidationErrorDB(error);
+  if (error.name === 'JsonWebTokenError') error = handleJWTError();
+  if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
+
+  sendErrorResponse(error, res);
 };
+
+
