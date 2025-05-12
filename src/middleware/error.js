@@ -52,6 +52,12 @@ const handleJWTExpiredError = () => new AppError('Your token has expired! Please
  * @param {Object} res - The response object used to send the error response.
  */
 const sendErrorResponse = (err, res) => {
+  // Check if response object is valid
+  if (!res || typeof res.status !== 'function') {
+    console.error('Invalid response object:', res);
+    return;
+  }
+
   const response = {
     status: err.status,
     message: err.message,
@@ -62,7 +68,7 @@ const sendErrorResponse = (err, res) => {
     }),
   };
 
-  res.status(err.statusCode).json(response);
+  res.status(err.statusCode || 500).json(response);
 };
 
 module.exports = (err, req, res) => {
