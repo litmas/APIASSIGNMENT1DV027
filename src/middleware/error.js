@@ -1,4 +1,3 @@
-const { StatusCodes } = require('http-status-codes');
 const AppError = require('../utils/appError');
 
 /**
@@ -8,7 +7,7 @@ const AppError = require('../utils/appError');
  */
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}.`;
-  return new AppError(message, StatusCodes.BAD_REQUEST);
+  return new AppError(message, 400);
 };
 
 /**
@@ -20,7 +19,7 @@ const handleCastErrorDB = (err) => {
 const handleDuplicateFieldsDB = (err) => {
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
   const message = `Duplicate field value: ${value}. Please use another value!`;
-  return new AppError(message, StatusCodes.BAD_REQUEST);
+  return new AppError(message, 400);
 };
 
 /**
@@ -31,20 +30,20 @@ const handleDuplicateFieldsDB = (err) => {
 const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
   const message = `Invalid input data. ${errors.join('. ')}`;
-  return new AppError(message, StatusCodes.BAD_REQUEST, { errors });
+  return new AppError(message, 400, { errors });
 };
 
 /**
  * Function to handle JWT error by creating a new AppError instance with a message 'Invalid token. Please log in again!' and a status code of 401.
  * @returns {AppError} AppError instance with message 'Invalid token. Please log in again!' and status code 401
  */
-const handleJWTError = () => new AppError('Invalid token. Please log in again!', StatusCodes.UNAUTHORIZED);
+const handleJWTError = () => new AppError('Invalid token. Please log in again!', 401);
 
 /**
  * Generates an error message for JWT expiration.
  * @returns {AppError} AppError instance with a 401 status code
  */
-const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', StatusCodes.UNAUTHORIZED);
+const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', 401);
 
 /**
  * Sends an error response to the client.
@@ -67,7 +66,7 @@ const sendErrorResponse = (err, res) => {
 };
 
 module.exports = (err, req, res) => {
-  err.statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+  err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
   let error = { ...err };
