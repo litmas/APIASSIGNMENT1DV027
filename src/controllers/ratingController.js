@@ -4,7 +4,16 @@ const { addHATEOASLinks } = require('../utils/hateoas');
 
 exports.getAllRatings = async (req, res, next) => {
   try {
-    const features = new APIFeatures(Rating.find(), req.query)
+    const features = new APIFeatures(
+      Rating.find().populate({
+        path: 'movie',
+        select: 'title releaseYear genre'
+      }).populate({
+        path: 'user',
+        select: 'name'
+      }), 
+      req.query
+    )
       .filter()
       .sort()
       .limitFields()
@@ -52,6 +61,15 @@ exports.createRating = async (req, res, next) => {
     req.body.user = req.user.id;
 
     const newRating = await Rating.create(req.body);
+
+    // Populate the movie and user data
+    await newRating.populate({
+      path: 'movie',
+      select: 'title releaseYear genre'
+    }).populate({
+      path: 'user',
+      select: 'name'
+    }).execPopulate();
 
     const ratingWithLinks = addHATEOASLinks(newRating.toObject(), req, 'rating');
 
