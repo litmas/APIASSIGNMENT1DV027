@@ -6,6 +6,11 @@ exports.register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     
+    // Validate required fields
+    if (!name || !email || !password) {
+      return next(new AppError('Please provide name, email and password', 400));
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) {
       return next(new AppError('User already exists with this email', 400));
@@ -27,6 +32,10 @@ exports.register = async (req, res, next) => {
       }
     });
   } catch (err) {
+    // Handle validation errors specifically
+    if (err.name === 'ValidationError') {
+      return next(new AppError(err.message, 400));
+    }
     next(err);
   }
 };
