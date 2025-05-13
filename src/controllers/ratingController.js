@@ -38,4 +38,37 @@ exports.getAllRatings = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+
+  exports.createRating = async (req, res, next) => {
+  try {
+    const { movie, value, review } = req.body;
+    
+    // Validate required fields
+    if (!movie || !value) {
+      return next(new AppError('Please provide movie and rating value', 400));
+    }
+
+    // Create the rating
+    const newRating = await Rating.create({
+      movie,
+      value,
+      review: review || '',
+      user: req.user._id // Assuming you have user authentication
+    });
+
+    const ratingWithLinks = addHATEOASLinks(newRating.toObject(), req, 'rating');
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        rating: ratingWithLinks
+      }
+    });
+  } catch (err) {
+    // Handle validation errors
+    if (err.name === 'ValidationError') {
+      return next(new AppError(err.message, 400));
+    }
+    next(err);
+  }
 };
