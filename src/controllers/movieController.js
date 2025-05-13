@@ -183,16 +183,43 @@ exports.getMovieRatings = async (req, res, next) => {
       return next(new AppError('No movie found with that ID', 404));
     }
 
-    const ratings = await Rating.find({ movie: req.params.id });
+    const features = new APIFeatures(
+      Rating.find({ movie: req.params.id })
+        .populate({
+          path: 'user',
+          select: 'name'
+        }),
+      req.query
+    )
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
 
-    const ratingsWithLinks = ratings.map((rating) => addHATEOASLinks(rating.toObject(), req, 'rating'));
+    const ratings = await features.query;
+    const total = await Rating.countDocuments({ movie: req.params.id });
+
+    const ratingsWithLinks = ratings.map(rating => 
+      addHATEOASLinks(rating.toObject(), req, 'rating')
+    );
+
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 10;
+    const totalPages = Math.ceil(total / limit);
 
     res.status(200).json({
       status: 'success',
       results: ratings.length,
       ratings: {
         ratings: ratingsWithLinks,
-      },
+        links: {
+          self: { href: req.originalUrl },
+          first: { href: `${req.baseUrl}/movies/${req.params.id}/ratings?page=1&limit=${limit}` },
+          prev: page > 1 ? { href: `${req.baseUrl}/movies/${req.params.id}/ratings?page=${page - 1}&limit=${limit}` } : null,
+          next: page < totalPages ? { href: `${req.baseUrl}/movies/${req.params.id}/ratings?page=${page + 1}&limit=${limit}` } : null,
+          last: { href: `${req.baseUrl}/movies/${req.params.id}/ratings?page=${totalPages}&limit=${limit}` }
+        }
+      }
     });
   } catch (err) {
     next(err);
