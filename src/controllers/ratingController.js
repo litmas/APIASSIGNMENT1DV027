@@ -39,3 +39,27 @@ exports.getAllRatings = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.createRating = async (req, res, next) => {
+  try {
+    // Check if the movie exists
+    const movie = await Movie.findById(req.body.movie);
+    if (!movie) {
+      return next(new AppError('No movie found with that ID', 404));
+    }
+
+    // Add user to the rating (from the protected route)
+    req.body.user = req.user.id;
+
+    const newRating = await Rating.create(req.body);
+
+    const ratingWithLinks = addHATEOASLinks(newRating.toObject(), req, 'rating');
+
+    res.status(201).json({
+      status: 'success',
+      data: ratingWithLinks
+    });
+  } catch (err) {
+    next(err);
+  }
+};
