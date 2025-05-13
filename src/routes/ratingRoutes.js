@@ -50,4 +50,55 @@ const ratingController = require('../controllers/ratingController');
  */
 router.get('/', ratingController.getAllRatings);
 
+const express = require('express');
+const router = express.Router();
+const ratingController = require('../controllers/ratingController');
+const authController = require('../controllers/authController');
+
+// ... existing GET route ...
+
+/**
+ * @swagger
+ * /api/v1/ratings:
+ *   post:
+ *     summary: Create a new rating
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - movie
+ *               - value
+ *             properties:
+ *               movie:
+ *                 type: string
+ *                 description: ID of the movie being rated
+ *               value:
+ *                 type: number
+ *                 minimum: 1
+ *                 maximum: 10
+ *                 description: Rating value (1-10)
+ *               review:
+ *                 type: string
+ *                 description: Optional review text
+ *     responses:
+ *       201:
+ *         description: Rating created successfully
+ *       400:
+ *         description: Bad request (missing fields or invalid data)
+ *       401:
+ *         description: Unauthorized (missing or invalid token)
+ */
+router.post('/', 
+  authController.protect, // Add authentication middleware
+  ratingController.createRating
+);
+
+module.exports = router;
+
 module.exports = router;
