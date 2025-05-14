@@ -75,21 +75,24 @@ const importData = async () => {
       }
     ];
 
-    const createdActors = await Actor.create(actors);
+    await Actor.create(actors);
 
     const ratings = [
       {
         movie: createdMovies[0]._id,
+        user: user._id,
         value: 9,
         review: 'Mind-blowing concept and execution!'
       },
       {
         movie: createdMovies[1]._id,
+        user: user._id,
         value: 10,
         review: 'The best movie ever made.'
       },
       {
         movie: createdMovies[2]._id,
+        user: user._id,
         value: 9,
         review: 'Heath Ledger\'s Joker is legendary.'
       }
@@ -99,7 +102,7 @@ const importData = async () => {
 
     console.log('Data successfully imported!');
   } catch (err) {
-    console.log(err);
+    console.log('Error importing data:', err);
   }
 };
 
