@@ -6,6 +6,11 @@ const ratingSchema = new mongoose.Schema({
     ref: 'Movie',
     required: [true, 'A rating must belong to a movie']
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'A rating must belong to a user']
+  },
   value: {
     type: Number,
     required: [true, 'A rating must have a value'],
@@ -23,10 +28,14 @@ const ratingSchema = new mongoose.Schema({
   }
 });
 
+// Populate movie and user data when querying ratings
 ratingSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'movie',
     select: 'title releaseYear'
+  }).populate({
+    path: 'user',
+    select: 'name email' // Adjust fields based on your User schema
   });
   next();
 });
