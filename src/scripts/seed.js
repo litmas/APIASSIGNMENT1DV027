@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const faker = require('faker');
 
 const Movie = require('../models/movieModel');
 const Actor = require('../models/actorModel');
@@ -53,7 +52,7 @@ const reviewTemplates = [
 ];
 
 const adjectives = [
-  'amazing', 'brilliant', captivating', 'compelling', 'dazzling', 'engaging',
+  'amazing', 'brilliant', 'captivating', 'compelling', 'dazzling', 'engaging',
   'exceptional', 'exhilarating', 'fantastic', 'gripping', 'impressive', 'incredible',
   'magnificent', 'masterful', 'memorable', 'mesmerizing', 'outstanding', 'remarkable',
   'spectacular', 'splendid', 'superb', 'thrilling', 'wonderful'
@@ -108,8 +107,8 @@ const generateMovieTitle = () => {
 const generateDescription = (title, genre) => {
   const templates = [
     `A ${getRandomElement(['young', 'brilliant', 'retired', 'reluctant'])} ${getRandomElement(['detective', 'scientist', 'agent', 'explorer'])} must ${getRandomElement(['save the world', 'solve a mystery', 'find the truth', 'face their past'])} in this ${genre.toLowerCase()} masterpiece.`,
-    `When ${getRandomElement(['a mysterious event', 'an ancient prophecy', 'a shocking discovery', 'a terrible tragedy')} occurs, ${getRandomElement(['a group of friends', 'an unlikely hero', 'a determined team', 'a family')} must ${getRandomElement(['fight for survival', 'uncover the secret', 'journey to a distant land', 'make a difficult choice')}.`,
-    `Set in ${getRandomElement(['a dystopian future', 'a magical realm', 'a small town', 'a bustling city')}, this ${genre.toLowerCase()} film explores themes of ${getRandomElement(['love', 'betrayal', 'redemption', 'courage', 'sacrifice'])} through the eyes of ${getRandomElement(['a troubled protagonist', 'an ordinary person', 'a legendary figure', 'a misunderstood outcast'])}.`
+    `When ${getRandomElement(['a mysterious event', 'an ancient prophecy', 'a shocking discovery', 'a terrible tragedy'])} occurs, ${getRandomElement(['a group of friends', 'an unlikely hero', 'a determined team', 'a family'])} must ${getRandomElement(['fight for survival', 'uncover the secret', 'journey to a distant land', 'make a difficult choice'])}.`,
+    `Set in ${getRandomElement(['a dystopian future', 'a magical realm', 'a small town', 'a bustling city'])}, this ${genre.toLowerCase()} film explores themes of ${getRandomElement(['love', 'betrayal', 'redemption', 'courage', 'sacrifice'])} through the eyes of ${getRandomElement(['a troubled protagonist', 'an ordinary person', 'a legendary figure', 'a misunderstood outcast'])}.`
   ];
   
   return getRandomElement(templates);
@@ -120,13 +119,15 @@ const generateDescription = (title, genre) => {
  */
 const generateReview = () => {
   const template = getRandomElement(reviewTemplates);
-  const adj1 = getRandomElement(adjectives);
-  const adj2 = getRandomElement(adjectives);
   const comment = getRandomElement(comments);
   
-  return template
-    .replace(/{adjective}/g, () => getRandomElement(adjectives))
-    .replace(/{comment}/, comment);
+  let result = template;
+  while (result.includes('{adjective}')) {
+    result = result.replace('{adjective}', getRandomElement(adjectives));
+  }
+  result = result.replace('{comment}', comment);
+  
+  return result;
 };
 
 /**
