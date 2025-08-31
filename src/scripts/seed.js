@@ -23,8 +23,8 @@ const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) +
 
 // Data pools for generating consistent data
 const genres = [
-  'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 
-  'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller'
+  'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary',
+  'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller',
 ];
 
 const firstNames = [
@@ -32,7 +32,19 @@ const firstNames = [
   'William', 'Elizabeth', 'David', 'Susan', 'Richard', 'Jessica', 'Joseph', 'Sarah',
   'Thomas', 'Karen', 'Charles', 'Nancy', 'Christopher', 'Lisa', 'Daniel', 'Betty',
   'Matthew', 'Margaret', 'Anthony', 'Sandra', 'Mark', 'Ashley', 'Donald', 'Kimberly',
-  'Steven', 'Emily', 'Paul', 'Donna', 'Andrew', 'Michelle', 'Joshua', 'Carol'
+  'Steven', 'Emily', 'Paul', 'Donna', 'Andrew', 'Michelle', 'Joshua', 'Carol',
+  'Kenneth', 'Amanda', 'Kevin', 'Melissa', 'Brian', 'Deborah', 'George', 'Stephanie',
+  'Edward', 'Rebecca', 'Ronald', 'Laura', 'Timothy', 'Helen', 'Jason', 'Sharon',
+  'Jeffrey', 'Cynthia', 'Ryan', 'Kathleen', 'Jacob', 'Amy', 'Gary', 'Shirley',
+  'Nicholas', 'Angela', 'Eric', 'Ruth', 'Jonathan', 'Brenda', 'Stephen', 'Pamela',
+  'Larry', 'Nicole', 'Justin', 'Katherine', 'Scott', 'Samantha', 'Brandon', 'Christine',
+  'Benjamin', 'Emma', 'Samuel', 'Catherine', 'Gregory', 'Debra', 'Alexander', 'Virginia',
+  'Patrick', 'Rachel', 'Frank', 'Carolyn', 'Raymond', 'Janet', 'Jack', 'Maria',
+  'Dennis', 'Heather', 'Jerry', 'Diane', 'Tyler', 'Julie', 'Aaron', 'Joyce',
+  'Jose', 'Victoria', 'Adam', 'Kelly', 'Nathan', 'Christina', 'Henry', 'Lauren',
+  'Douglas', 'Joan', 'Zachary', 'Evelyn', 'Peter', 'Olivia', 'Kyle', 'Judith',
+  'Ethan', 'Megan', 'Walter', 'Cheryl', 'Noah', 'Martha', 'Jeremy', 'Andrea',
+  'Christian', 'Frances', 'Keith', 'Hannah', 'Roger', 'Jacqueline', 'Terry', 'Ann',
 ];
 
 const lastNames = [
@@ -40,7 +52,17 @@ const lastNames = [
   'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson',
   'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson',
   'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker',
-  'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores'
+  'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
+  'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell',
+  'Carter', 'Roberts', 'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker',
+  'Cruz', 'Edwards', 'Collins', 'Reyes', 'Stewart', 'Morris', 'Morales', 'Murphy',
+  'Cook', 'Rogers', 'Gutierrez', 'Ortiz', 'Morgan', 'Cooper', 'Peterson', 'Bailey',
+  'Reed', 'Kelly', 'Howard', 'Ramos', 'Kim', 'Cox', 'Ward', 'Richardson',
+  'Watson', 'Brooks', 'Chavez', 'Wood', 'James', 'Bennett', 'Gray', 'Mendoza',
+  'Ruiz', 'Hughes', 'Price', 'Alvarez', 'Castillo', 'Sanders', 'Patel', 'Myers',
+  'Long', 'Ross', 'Foster', 'Jimenez', 'Powell', 'Jenkins', 'Perry', 'Russell',
+  'Sullivan', 'Bell', 'Coleman', 'Butler', 'Henderson', 'Barnes', 'Gonzales', 'Fisher',
+  'Vasquez', 'Simmons', 'Romero', 'Jordan', 'Patterson', 'Alexander', 'Hamilton', 'Graham',
 ];
 
 const reviewTemplates = [
@@ -48,22 +70,22 @@ const reviewTemplates = [
   '{adjective} film with {adjective} performances. {comment}',
   'I was {adjective} by this movie. {comment}',
   'A {adjective} cinematic experience. {comment}',
-  '{adjective} storytelling and {adjective} visuals. {comment}'
+  '{adjective} storytelling and {adjective} visuals. {comment}',
 ];
 
 const adjectives = [
   'amazing', 'brilliant', 'captivating', 'compelling', 'dazzling', 'engaging',
   'exceptional', 'exhilarating', 'fantastic', 'gripping', 'impressive', 'incredible',
   'magnificent', 'masterful', 'memorable', 'mesmerizing', 'outstanding', 'remarkable',
-  'spectacular', 'splendid', 'superb', 'thrilling', 'wonderful'
+  'spectacular', 'splendid', 'superb', 'thrilling', 'wonderful',
 ];
 
 const comments = [
-  'The direction was top-notch.', 'The cinematography was stunning.', 
+  'The direction was top-notch.', 'The cinematography was stunning.',
   'The score complemented the visuals perfectly.', 'The pacing kept me engaged throughout.',
   'The character development was exceptional.', 'The plot twists were unexpected yet satisfying.',
   'The emotional depth resonated with me.', 'The visual effects were groundbreaking.',
-  'The dialogue was sharp and witty.', 'The performances were award-worthy.'
+  'The dialogue was sharp and witty.', 'The performances were award-worthy.',
 ];
 
 /**
@@ -91,14 +113,13 @@ const generateMovieTitle = () => {
   const prefixes = ['The', 'A', 'Beyond', 'Inside', 'Eternal', 'Last', 'First', 'Secret'];
   const nouns = ['Dream', 'Night', 'Day', 'Time', 'Life', 'Love', 'War', 'Peace', 'Journey', 'Destiny'];
   const suffixes = ['Returns', 'Begins', 'Rises', 'Falls', 'Awakens', 'Ends', 'Continues', 'Reborn'];
-  
+
   if (Math.random() > 0.7) {
     return `${getRandomElement(prefixes)} ${getRandomElement(nouns)}`;
-  } else if (Math.random() > 0.5) {
+  } if (Math.random() > 0.5) {
     return `${getRandomElement(nouns)} ${getRandomElement(suffixes)}`;
-  } else {
-    return `${getRandomElement(prefixes)} ${getRandomElement(nouns)} ${getRandomElement(suffixes)}`;
   }
+  return `${getRandomElement(prefixes)} ${getRandomElement(nouns)} ${getRandomElement(suffixes)}`;
 };
 
 /**
@@ -108,9 +129,9 @@ const generateDescription = (title, genre) => {
   const templates = [
     `A ${getRandomElement(['young', 'brilliant', 'retired', 'reluctant'])} ${getRandomElement(['detective', 'scientist', 'agent', 'explorer'])} must ${getRandomElement(['save the world', 'solve a mystery', 'find the truth', 'face their past'])} in this ${genre.toLowerCase()} masterpiece.`,
     `When ${getRandomElement(['a mysterious event', 'an ancient prophecy', 'a shocking discovery', 'a terrible tragedy'])} occurs, ${getRandomElement(['a group of friends', 'an unlikely hero', 'a determined team', 'a family'])} must ${getRandomElement(['fight for survival', 'uncover the secret', 'journey to a distant land', 'make a difficult choice'])}.`,
-    `Set in ${getRandomElement(['a dystopian future', 'a magical realm', 'a small town', 'a bustling city'])}, this ${genre.toLowerCase()} film explores themes of ${getRandomElement(['love', 'betrayal', 'redemption', 'courage', 'sacrifice'])} through the eyes of ${getRandomElement(['a troubled protagonist', 'an ordinary person', 'a legendary figure', 'a misunderstood outcast'])}.`
+    `Set in ${getRandomElement(['a dystopian future', 'a magical realm', 'a small town', 'a bustling city'])}, this ${genre.toLowerCase()} film explores themes of ${getRandomElement(['love', 'betrayal', 'redemption', 'courage', 'sacrifice'])} through the eyes of ${getRandomElement(['a troubled protagonist', 'an ordinary person', 'a legendary figure', 'a misunderstood outcast'])}.`,
   ];
-  
+
   return getRandomElement(templates);
 };
 
@@ -120,13 +141,13 @@ const generateDescription = (title, genre) => {
 const generateReview = () => {
   const template = getRandomElement(reviewTemplates);
   const comment = getRandomElement(comments);
-  
+
   let result = template;
   while (result.includes('{adjective}')) {
     result = result.replace('{adjective}', getRandomElement(adjectives));
   }
   result = result.replace('{comment}', comment);
-  
+
   return result;
 };
 
@@ -138,66 +159,79 @@ const generateReview = () => {
 const importData = async () => {
   try {
     console.log('Starting data generation...');
-    
-    // Create 100 users
+
+    // Create 100 users with unique emails
     const users = [];
+    const usedEmails = new Set();
+
     for (let i = 0; i < 100; i++) {
-      const firstName = getRandomElement(firstNames);
-      const lastName = getRandomElement(lastNames);
-      
+      let firstName; let lastName; let
+        email;
+      let attempts = 0;
+
+      // Ensure unique email
+      do {
+        firstName = getRandomElement(firstNames);
+        lastName = getRandomElement(lastNames);
+        email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${attempts > 0 ? attempts : ''}@example.com`;
+        attempts++;
+      } while (usedEmails.has(email) && attempts < 10);
+
+      usedEmails.add(email);
+
       users.push({
         name: `${firstName} ${lastName}`,
-        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
+        email,
         password: 'test1234',
         passwordConfirm: 'test1234',
       });
     }
-    
+
     const createdUsers = await User.create(users);
     console.log(`${createdUsers.length} users created`);
-    
+
     // Create 200 movies
     const movies = [];
     for (let i = 0; i < 200; i++) {
       const genre = getRandomElement(genres);
       const title = generateMovieTitle();
-      
+
       movies.push({
-        title: title,
+        title,
         releaseYear: getRandomInt(1980, 2023),
-        genre: genre,
+        genre,
         description: generateDescription(title, genre),
       });
     }
-    
+
     const createdMovies = await Movie.create(movies);
     console.log(`${createdMovies.length} movies created`);
-    
+
     // Create 300 actors
     const actors = [];
     for (let i = 0; i < 300; i++) {
       const firstName = getRandomElement(firstNames);
       const lastName = getRandomElement(lastNames);
-      
+
       // Each actor appears in 1-5 random movies
       const movieCount = getRandomInt(1, 5);
-      const moviesPlayed = getRandomElements(createdMovies, movieCount).map(movie => movie._id);
-      
+      const moviesPlayed = getRandomElements(createdMovies, movieCount).map((movie) => movie._id);
+
       actors.push({
         name: `${firstName} ${lastName}`,
-        moviesPlayed: moviesPlayed,
+        moviesPlayed,
       });
     }
-    
+
     const createdActors = await Actor.create(actors);
     console.log(`${createdActors.length} actors created`);
-    
+
     // Create 400 ratings (4 per movie on average)
     const ratings = [];
     for (let i = 0; i < 400; i++) {
       const movie = getRandomElement(createdMovies);
       const user = getRandomElement(createdUsers);
-      
+
       ratings.push({
         movie: movie._id,
         user: user._id,
@@ -205,10 +239,10 @@ const importData = async () => {
         review: generateReview(),
       });
     }
-    
+
     await Rating.create(ratings);
     console.log(`${ratings.length} ratings created`);
-    
+
     console.log('Data successfully imported!');
   } catch (err) {
     console.log(err);
